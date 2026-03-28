@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     supabase_url: str
     supabase_service_key: str
 
+    # LiveKit
+    livekit_api_key: str = ""
+    livekit_api_secret: str = ""
+    livekit_ws_url: str = ""
+
     # OpenAI
     openai_api_key: str
     openai_model: str = "gpt-4o"

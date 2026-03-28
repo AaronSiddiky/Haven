@@ -18,6 +18,7 @@ twilio = ">=8.0.0"
 python-dotenv = ">=1.0.0"
 sse-starlette = ">=1.8.0"
 python-multipart = ">=0.0.9"
+livekit-api = ">=0.7.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.0.0"

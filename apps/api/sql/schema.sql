@@ -83,6 +83,33 @@ create table if not exists action_logs (
     created_at          timestamptz not null default now()
 );
 
+-- ─── Sessions (LiveKit room management) ──────────────────────────────────────
+create table if not exists sessions (
+    id                  uuid primary key default uuid_generate_v4(),
+    status              text not null default 'pending'
+                            check (status in ('pending', 'active', 'ended')),
+    livekit_room_name   text not null,
+    openai_session_id   text,
+    worker_id           uuid,
+    created_at          timestamptz not null default now(),
+    ended_at            timestamptz
+);
+
+-- ─── Workers (OpenClaw host + screen-share publisher) ─────────────────────────
+create table if not exists workers (
+    id                  uuid primary key default uuid_generate_v4(),
+    label               text not null,
+    machine_name        text not null,
+    gateway_url         text not null,
+    openclaw_mode       text not null default 'openclaw',
+    status              text not null default 'idle'
+                            check (status in ('idle', 'active', 'offline')),
+    screen_stream_status text not null default 'disconnected'
+                            check (screen_stream_status in ('disconnected', 'connected')),
+    last_seen_at        timestamptz,
+    created_at          timestamptz not null default now()
+);
+
 -- ─── Indexes ──────────────────────────────────────────────────────────────────
 create index if not exists idx_monitored_places_user      on monitored_places(user_id);
 create index if not exists idx_emergency_contacts_user    on emergency_contacts(user_id);
