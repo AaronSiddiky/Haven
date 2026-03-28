@@ -9,6 +9,7 @@ from typing import Any, Callable, Dict, List
 
 from app.agents.tool_handlers import (
     call_emergency_contact,
+    execute_computer_task,
     explain_why_alerted,
     get_active_alerts,
     open_evacuation_page,
@@ -160,6 +161,30 @@ TOOLS: List[Dict[str, Any]] = [
             "required": ["user_id"],
         },
     },
+    {
+        "type": "function",
+        "name": "execute_computer_task",
+        "description": (
+            "Execute a task on the user's computer using the remote browser agent (OpenClaw). "
+            "Use this for any general web browsing, searching, form filling, information "
+            "retrieval, or other browser-based task the user requests. Examples: "
+            "'open wikipedia', 'search for weather in NYC', 'go to nytimes.com'."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "instruction": {
+                    "type": "string",
+                    "description": "Natural language description of what to do on the computer.",
+                },
+                "session_id": {
+                    "type": "string",
+                    "description": "The current Haven session ID.",
+                },
+            },
+            "required": ["instruction"],
+        },
+    },
 ]
 
 HANDLER_MAP: Dict[str, Callable] = {
@@ -169,6 +194,7 @@ HANDLER_MAP: Dict[str, Callable] = {
     "call_emergency_contact": call_emergency_contact.handle,
     "explain_why_alerted": explain_why_alerted.handle,
     "update_monitoring_preferences": update_monitoring_preferences.handle,
+    "execute_computer_task": execute_computer_task.handle,
 }
 
 

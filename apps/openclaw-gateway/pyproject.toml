@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "haven-openclaw-gateway"
+version = "0.1.0"
+description = "Local gateway that receives commands from Haven API and drives a visible Playwright browser"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+"uvicorn[standard]" = "^0.34.0"
+playwright = "^1.49.0"
+httpx = "^0.28.0"
+pydantic-settings = "^2.7.0"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-asyncio = "^0.25.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
