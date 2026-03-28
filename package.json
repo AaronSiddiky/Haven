@@ -5,7 +5,7 @@
   "description": "Autonomous agent for the visually impaired",
   "workspaces": [
     "apps/*",
-    "backend/*",
+    "apps/backend/*",
     "packages/*"
   ],
   "scripts": {
