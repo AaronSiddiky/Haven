@@ -1,0 +1,55 @@
+{
+  "scenario": "flood-warning",
+  "description": "Flash flood warning in a populated urban area — moderate severity, clear evacuation path",
+  "alerts": [
+    {
+      "source": "NWS",
+      "external_id": "urn:oid:2.49.0.1.840.0.sim-flood-001",
+      "properties": {
+        "id": "urn:oid:2.49.0.1.840.0.sim-flood-001",
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.sim-flood-001",
+        "event": "Flash Flood Warning",
+        "headline": "Flash Flood Warning issued for Downtown Sacramento until 8:00 PM PDT",
+        "areaDesc": "Downtown Sacramento; Midtown Sacramento; Land Park",
+        "severity": "Severe",
+        "certainty": "Observed",
+        "urgency": "Immediate",
+        "response": "Evacuate",
+        "status": "Actual",
+        "messageType": "Alert",
+        "category": "Met",
+        "sent": "2024-03-15T14:00:00-07:00",
+        "effective": "2024-03-15T14:00:00-07:00",
+        "onset": "2024-03-15T14:00:00-07:00",
+        "expires": "2024-03-15T20:00:00-07:00",
+        "ends": "2024-03-15T20:00:00-07:00",
+        "description": "AT 2 PM PDT, emergency management reported heavy rainfall producing flash flooding in downtown Sacramento. Water levels are rising rapidly in low-lying areas near the American River. Numerous roads are flooded and impassable.",
+        "instruction": "Move immediately to higher ground. Do not attempt to drive through flooded roads. Turn Around Don't Drown. Call 911 if in immediate danger.",
+        "parameters": {
+          "NWSheadline": ["FLASH FLOOD WARNING IN EFFECT UNTIL 8 PM PDT THIS EVENING"],
+          "BLOCKCHANNEL": ["EAS", "NWEM", "CMAS"],
+          "VTEC": ["/O.NEW.KSAC.FF.W.0001.240315T2100Z-240316T0300Z/"]
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-121.5100, 38.5800],
+          [-121.4700, 38.5800],
+          [-121.4700, 38.5500],
+          [-121.5100, 38.5500],
+          [-121.5100, 38.5800]
+        ]]
+      }
+    }
+  ],
+  "monitored_place": {
+    "label": "Home",
+    "lat": 38.5650,
+    "lon": -121.4900,
+    "radius_km": 10.0
+  },
+  "expected_severity": "warning",
+  "demo_voice_prompt": "Are there any active flood alerts near my home?",
+  "expected_agent_response": "Yes — there is an active Flash Flood Warning for Downtown Sacramento until 8 PM tonight. Flooding is occurring now near the American River. You should move to higher ground and avoid driving. Shall I open the official evacuation guidance?"
+}

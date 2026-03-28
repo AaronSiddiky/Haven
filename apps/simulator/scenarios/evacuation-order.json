@@ -1,0 +1,58 @@
+{
+  "scenario": "evacuation-order",
+  "description": "Wildfire evacuation order — act_now severity with active approval flow demo",
+  "alerts": [
+    {
+      "source": "NWS",
+      "external_id": "urn:oid:2.49.0.1.840.0.sim-evac-001",
+      "properties": {
+        "id": "urn:oid:2.49.0.1.840.0.sim-evac-001",
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.sim-evac-001",
+        "event": "Evacuation - Immediate",
+        "headline": "Mandatory Evacuation Order for Paradise Ridge — Leave Now",
+        "areaDesc": "Paradise Ridge; Magalia; Butte Creek Canyon",
+        "severity": "Extreme",
+        "certainty": "Observed",
+        "urgency": "Immediate",
+        "response": "Evacuate",
+        "status": "Actual",
+        "messageType": "Alert",
+        "category": "Fire",
+        "sent": "2024-03-15T11:30:00-07:00",
+        "effective": "2024-03-15T11:30:00-07:00",
+        "onset": "2024-03-15T11:30:00-07:00",
+        "expires": "2024-03-16T11:30:00-07:00",
+        "description": "A MANDATORY EVACUATION ORDER is in effect for Paradise Ridge, Magalia, and Butte Creek Canyon due to the Ridge Fire burning approximately 2,000 acres. The fire is 0% contained and moving rapidly due to 40+ mph wind gusts. Structures are threatened. This is a life-threatening situation.",
+        "instruction": "LEAVE NOW. Do not wait. Take medications, important documents, pets, and go bags. Use Highway 191 northbound as your evacuation route. Do not return until officials say it is safe.",
+        "parameters": {
+          "NWSheadline": ["MANDATORY EVACUATION ORDER IN EFFECT"],
+          "BLOCKCHANNEL": ["EAS", "NWEM", "CMAS"]
+        }
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-121.6200, 39.7800],
+          [-121.5500, 39.7800],
+          [-121.5500, 39.7200],
+          [-121.6200, 39.7200],
+          [-121.6200, 39.7800]
+        ]]
+      }
+    }
+  ],
+  "monitored_place": {
+    "label": "Parents' Home",
+    "lat": 39.7600,
+    "lon": -121.5900,
+    "radius_km": 15.0
+  },
+  "expected_severity": "act_now",
+  "demo_voice_prompt": "What's happening near my parents' place?",
+  "demo_approval_flow": {
+    "trigger": "Shall I contact your emergency contacts?",
+    "approval_action": "call_emergency_contact",
+    "approval_required": true
+  },
+  "expected_agent_response": "URGENT: There is a Mandatory Evacuation Order for Paradise Ridge where your parents live. This is a wildfire — leave now. I can contact your emergency contacts or open the evacuation route. What would you like me to do?"
+}

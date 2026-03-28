@@ -1,0 +1,46 @@
+{
+  "scenario": "conflicting-signals",
+  "description": "Demonstrates social signal rejection — a viral post claims a gas leak but no official alert exists. Shows the system's signal validation.",
+  "alerts": [
+    {
+      "source": "NWS",
+      "external_id": "urn:oid:2.49.0.1.840.0.sim-air-001",
+      "properties": {
+        "id": "urn:oid:2.49.0.1.840.0.sim-air-001",
+        "event": "Air Quality Alert",
+        "headline": "Air Quality Alert for San Francisco Bay Area",
+        "areaDesc": "San Francisco; Oakland; Berkeley; Marin County",
+        "severity": "Minor",
+        "certainty": "Observed",
+        "urgency": "Expected",
+        "response": "Monitor",
+        "status": "Actual",
+        "messageType": "Alert",
+        "sent": "2024-03-15T09:00:00-07:00",
+        "effective": "2024-03-15T09:00:00-07:00",
+        "onset": "2024-03-15T09:00:00-07:00",
+        "expires": "2024-03-15T21:00:00-07:00",
+        "description": "An Air Quality Alert is in effect due to elevated particulate matter from offshore winds. Sensitive groups including those with asthma or heart conditions should reduce outdoor activity.",
+        "instruction": "Limit prolonged or heavy outdoor exertion. Keep windows closed. Sensitive groups should stay indoors.",
+        "parameters": {}
+      },
+      "geometry": null
+    }
+  ],
+  "social_signals": [
+    {
+      "source": "social",
+      "platform": "X",
+      "text": "HUGE gas explosion near Market Street SF!! Can smell gas everywhere, evacuate NOW!!",
+      "mention_count": 847,
+      "source_reliability": 0.3,
+      "corroborates_official": false,
+      "expected_classification": "inform",
+      "note": "High virality but low-reliability source and no official corroboration — capped at inform, not surfaced as warning"
+    }
+  ],
+  "expected_severity": "inform",
+  "demo_voice_prompt": "I saw something on social media about a gas explosion near Market Street. Is that real?",
+  "expected_agent_response": "I found one official alert in your area — an Air Quality Advisory for the Bay Area today due to offshore winds. There's no official report of a gas explosion near Market Street. The social media post hasn't been confirmed by any official source. I'd recommend monitoring official channels. Shall I check for any updates?",
+  "key_demo_point": "Haven surfaces only the official Air Quality Alert at 'inform' severity. It does not amplify the unverified social signal to a higher tier."
+}

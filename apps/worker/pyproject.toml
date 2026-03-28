@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "haven-worker"
+version = "0.1.0"
+description = "Haven background worker — alert polling, expiry, notifications"
+authors = ["Haven Team"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+apscheduler = ">=3.10.0"
+supabase = ">=2.4.0"
+httpx = ">=0.27.0"
+pydantic-settings = ">=2.2.0"
+python-dotenv = ">=1.0.0"
+twilio = ">=8.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
