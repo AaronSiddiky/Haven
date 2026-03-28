@@ -1,0 +1,11 @@
+{
+  "name": "@haven/openclaw",
+  "version": "0.0.1",
+  "private": true,
+  "description": "OpenClaw integration layer for Haven",
+  "scripts": {
+    "dev": "echo 'TODO: configure OpenClaw'",
+    "build": "echo 'TODO: configure build'",
+    "lint": "echo 'TODO: configure linter'"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@haven/shared",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Shared types, utilities, and constants",
+  "scripts": {
+    "build": "echo 'TODO: configure build'",
+    "lint": "echo 'TODO: configure linter'"
+  }
+}

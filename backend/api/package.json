@@ -1,0 +1,10 @@
+{
+  "name": "@haven/api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'TODO: configure API server'",
+    "build": "echo 'TODO: configure build'",
+    "lint": "echo 'TODO: configure linter'"
+  }
+}
