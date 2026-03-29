@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ScreenViewer } from "@/components/ScreenViewer";
 import { Transcript } from "@/components/Transcript";
@@ -9,13 +9,11 @@ import { createHavenSession } from "@/lib/api";
 const USER_ID = "demo-user";
 
 export function VoiceCircle() {
-  const [havenSessionId, setHavenSessionId] = useState<string | null>(null);
-  const [showTranscript, setShowTranscript] = useState(true);
   const { state, transcript, error, connect, disconnect } =
     useVoiceSession(USER_ID);
   useEffect(() => {
     createHavenSession()
-      .then((s) => setHavenSessionId(s.id))
+      .then(() => {})
       .catch((err) => console.error("Failed to create Haven session:", err));
   }, []);
 
@@ -29,14 +27,17 @@ export function VoiceCircle() {
 
   const isConnected =
     state !== "idle" && state !== "connecting" && state !== "error";
+  const isVoiceActive = state === "listening" || state === "speaking";
+  const isThinking = state === "thinking";
 
   return (
-    <div className="painted-bg-subtle flex h-screen flex-col">
+    <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#f6f4fb]">
+
       {/* Header */}
-      <header className="flex items-center justify-between px-5 py-4 sm:px-8">
+      <header className="relative z-20 flex items-center justify-between px-5 py-4 sm:px-8">
         <Link
           to="/"
-          className="flex items-center gap-2.5 rounded-lg py-1 text-sm font-medium text-fg/50 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+          className="flex items-center gap-2.5 rounded-lg py-1 text-sm font-medium text-fg/55 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +60,7 @@ export function VoiceCircle() {
               {error}
             </span>
           )}
-          <div className="flex items-center gap-2 rounded-full bg-white/50 px-3 py-1.5 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1.5 shadow-sm">
             <div
               className={`h-1.5 w-1.5 rounded-full transition-colors duration-500 ${
                 isConnected ? "bg-emerald-500" : "bg-fg/20"
@@ -72,50 +73,66 @@ export function VoiceCircle() {
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left pane — Voice */}
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <VoiceOrb state={state} onClick={handleOrbClick} />
+      {/* Main content: separate rounded panes */}
+      <div className="relative z-10 grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-hidden px-3 sm:px-5 lg:grid-cols-2 lg:gap-5 lg:px-6">
+        {/* Left pane — Screen share */}
+        <div className="min-h-0 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_3px_14px_rgba(20,20,40,0.05)]">
+          <div className="flex h-12 items-center justify-between border-b border-black/5 px-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-fg/45">
+              Screen share
+            </span>
+            <span className="rounded-full bg-[#f7f7fb] px-2.5 py-1 text-[0.65rem] font-medium text-fg/45">
+              Live
+            </span>
+          </div>
+          <div className="h-[calc(100%-3rem)] p-2">
+            <div className="h-full overflow-hidden rounded-2xl border border-black/[0.06] bg-white">
+              <ScreenViewer />
+            </div>
+          </div>
         </div>
 
-        {/* Right pane — Screen viewer */}
-        <div className="hidden w-1/2 lg:block">
-          <div className="mx-3 mb-3 mt-0 flex h-[calc(100%-0.75rem)] flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white/40 backdrop-blur-sm">
-            <ScreenViewer />
+        {/* Right pane — Transcript rectangle */}
+        <div className="min-h-0 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_3px_14px_rgba(20,20,40,0.05)]">
+          <div className="flex h-12 items-center justify-between border-b border-black/5 px-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-fg/45">
+              Transcript
+            </span>
+            <span className="text-[0.7rem] text-fg/35">
+              {transcript.length} message{transcript.length === 1 ? "" : "s"}
+            </span>
+          </div>
+          <div className="h-[calc(100%-3rem)] overflow-hidden">
+            <Transcript entries={transcript} />
           </div>
         </div>
       </div>
 
-      {/* Bottom — Transcript */}
-      <div
-        className={`transition-all duration-300 ${
-          showTranscript ? "h-56" : "h-10"
-        }`}
-      >
-        <button
-          onClick={() => setShowTranscript(!showTranscript)}
-          className="flex w-full items-center justify-between border-t border-black/[0.06] px-5 py-2.5 text-xs font-medium text-fg/45 hover:text-fg/70"
-        >
-          <span>Transcript</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className={`h-4 w-4 transition-transform ${showTranscript ? "rotate-180" : ""}`}
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-        {showTranscript && (
-          <div className="h-[calc(100%-2.5rem)] overflow-hidden">
-            <Transcript entries={transcript} />
+      {/* Bottom center — Voice controls + reactive visualizer */}
+      <div className="relative z-20 px-3 pb-4 pt-4 sm:px-5 lg:px-6">
+        <div className="mx-auto w-full max-w-[430px] rounded-3xl border border-black/10 bg-white p-4 shadow-[0_3px_14px_rgba(20,20,40,0.05)]">
+          <div className="flex items-center justify-center gap-2.5 pb-3">
+            {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+              <span
+                key={i}
+                className={`w-1.5 rounded-full transition-all duration-500 ${
+                  isVoiceActive
+                    ? "h-6 animate-pulse bg-[#9178c2]/75"
+                    : isThinking
+                      ? "h-4 animate-pulse bg-[#6fa6de]/70"
+                      : "h-2 bg-fg/18"
+                }`}
+                style={{
+                  animationDelay: `${i * 90}ms`,
+                  height: isVoiceActive ? `${18 + ((i % 3) + 1) * 6}px` : undefined,
+                }}
+              />
+            ))}
           </div>
-        )}
+          <div className="flex items-center justify-center">
+            <VoiceOrb state={state} onClick={handleOrbClick} />
+          </div>
+        </div>
       </div>
     </div>
   );

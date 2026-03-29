@@ -69,7 +69,7 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
 
       {/* Right — login */}
       <Link
-        to="/voice"
+        to="/login"
         className="min-h-9 rounded-full border border-fg/15 bg-white/60 px-5 py-1.5 text-sm font-medium text-fg backdrop-blur-sm transition-colors hover:border-fg/30 hover:bg-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
       >
         Get started
