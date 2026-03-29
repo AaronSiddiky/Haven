@@ -24,10 +24,14 @@ _last_seen_tweet_id: Optional[str] = None
 _cached_user_id: Optional[str] = None
 
 CLASSIFY_SYSTEM = (
-    "You are a threat-classification model. Given a tweet, decide if it describes "
-    "a real, imminent geopolitical emergency, military conflict, natural disaster, "
-    "or safety threat that would require someone to take immediate protective action "
-    "(e.g. shelter, evacuate, power down). Respond ONLY with valid JSON: "
+    "You are a threat-classification model for a personal safety app. "
+    "Given a tweet, decide if it mentions ANY of the following: war, military conflict, "
+    "armed forces, attacks, bombings, missiles, drones, invasions, geopolitical tensions, "
+    "natural disasters, emergencies, or any situation that could escalate into danger. "
+    "Be VERY aggressive in classifying as urgent — if there is ANY mention of conflict, "
+    "military, weapons, or threats, mark it as urgent. Only mark as not urgent if the "
+    "tweet is completely unrelated to safety/conflict (e.g. sports, entertainment, casual chat). "
+    "Respond ONLY with valid JSON: "
     '{"urgent": true/false, "summary": "<1-sentence summary>"}'
 )
 
