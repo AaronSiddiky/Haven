@@ -2,8 +2,12 @@
 OpenClaw client — forwards instructions to the local OpenClaw agent.
 
 Communicates via POST /tools/invoke on the OpenClaw Gateway (port 18789).
-Uses the `sessions_send` tool to inject messages into the agent session
-and wait for a response.
+Uses the `sessions_send` tool to inject messages into the agent session.
+
+Token cost controls:
+- contextTokens capped at 30k in openclaw.json (was 200k)
+- Model switched to claude-sonnet-4-6 (was opus, 5x cheaper)
+- Sessions cleared on restart to prevent context accumulation
 """
 import logging
 from typing import Any, Dict, Optional
