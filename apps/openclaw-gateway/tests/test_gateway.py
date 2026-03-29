@@ -6,8 +6,8 @@ Run with:
     python -m pytest tests/test_gateway.py -v
 
 Prerequisites:
-    - No other services need to be running
-    - Playwright browsers must be installed: playwright install chromium
+    - Gateway running on localhost:9090
+    - OpenClaw running on localhost:18789
 """
 import pytest
 import httpx
@@ -30,34 +30,20 @@ pytestmark = pytest.mark.skipif(
 
 
 def test_health():
-    """Test 3a: Health endpoint returns ok with browser status."""
+    """Health endpoint returns ok with OpenClaw connectivity status."""
     resp = httpx.get(f"{GATEWAY_URL}/health")
     assert resp.status_code == 200
     data = resp.json()
     assert data["status"] == "ok"
-    assert data["browser"] in ("running", "stopped")
+    assert "openclaw" in data
 
 
-def test_execute_open_url():
-    """Test 3b: open_url tool navigates the browser."""
+def test_execute_instruction():
+    """Sending an instruction forwards it to OpenClaw."""
     resp = httpx.post(
         f"{GATEWAY_URL}/execute",
-        json={"tool": "open_url", "params": {"url": "https://example.com"}},
-        timeout=30.0,
-    )
-    assert resp.status_code == 200
-    data = resp.json()
-    assert data["status"] == "ok"
-    assert data["run_id"]
-    assert "example.com" in data.get("url", "")
-
-
-def test_execute_search():
-    """Test 3c: search tool performs a Google search."""
-    resp = httpx.post(
-        f"{GATEWAY_URL}/execute",
-        json={"tool": "search", "params": {"query": "test query"}},
-        timeout=30.0,
+        json={"instruction": "What time is it?"},
+        timeout=60.0,
     )
     assert resp.status_code == 200
     data = resp.json()
@@ -65,25 +51,11 @@ def test_execute_search():
     assert data["run_id"]
 
 
-def test_execute_screenshot():
-    """Screenshot tool returns base64 PNG."""
+def test_execute_empty_instruction():
+    """Empty instruction returns 400."""
     resp = httpx.post(
         f"{GATEWAY_URL}/execute",
-        json={"tool": "screenshot", "params": {}},
-        timeout=15.0,
-    )
-    assert resp.status_code == 200
-    data = resp.json()
-    assert data["status"] == "ok"
-    assert data.get("screenshot_base64")
-    assert data.get("format") == "png"
-
-
-def test_execute_unknown_tool():
-    """Unknown tool returns 400."""
-    resp = httpx.post(
-        f"{GATEWAY_URL}/execute",
-        json={"tool": "nonexistent", "params": {}},
+        json={"instruction": ""},
         timeout=5.0,
     )
     assert resp.status_code == 400
@@ -93,26 +65,11 @@ def test_get_run():
     """Completed runs are queryable via GET /runs/{id}."""
     create_resp = httpx.post(
         f"{GATEWAY_URL}/execute",
-        json={"tool": "open_url", "params": {"url": "https://example.com"}},
-        timeout=30.0,
+        json={"instruction": "Say hello"},
+        timeout=60.0,
     )
     run_id = create_resp.json()["run_id"]
     resp = httpx.get(f"{GATEWAY_URL}/runs/{run_id}", timeout=5.0)
     assert resp.status_code == 200
     data = resp.json()
     assert data["status"] == "completed"
-
-
-def test_execute_task():
-    """execute_task tool processes natural language instructions."""
-    resp = httpx.post(
-        f"{GATEWAY_URL}/execute",
-        json={
-            "tool": "execute_task",
-            "params": {"instruction": "open https://example.com"},
-        },
-        timeout=30.0,
-    )
-    assert resp.status_code == 200
-    data = resp.json()
-    assert data["status"] == "ok"

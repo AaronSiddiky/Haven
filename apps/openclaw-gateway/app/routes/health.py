@@ -1,13 +1,15 @@
 from fastapi import APIRouter
 
-from app import browser
+from app.openclaw import health_check
 
 router = APIRouter()
 
 
 @router.get("/health")
-def health():
+async def health():
+    openclaw_status = await health_check()
     return {
         "status": "ok",
-        "browser": "running" if browser.is_running() else "stopped",
+        "gateway": "running",
+        "openclaw": openclaw_status,
     }

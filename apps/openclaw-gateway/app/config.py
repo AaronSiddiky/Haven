@@ -9,9 +9,11 @@ class GatewaySettings(BaseSettings):
     gateway_port: int = 9090
     gateway_label: str = "local-dev"
     machine_name: str = "macbook"
-    headless: bool = False
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    openclaw_url: str = "http://127.0.0.1:18789"
+    openclaw_token: str = ""
+
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 @lru_cache()

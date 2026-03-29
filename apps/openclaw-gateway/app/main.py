@@ -1,5 +1,9 @@
 """
-OpenClaw Gateway — local FastAPI server that drives a visible Playwright browser.
+OpenClaw Gateway — thin HTTP bridge between Haven API and OpenClaw.
+
+Haven API sends natural language instructions here.
+This gateway forwards them to OpenClaw (running on localhost:18789).
+OpenClaw handles all browser/desktop automation autonomously.
 
 Start with:
     cd apps/openclaw-gateway
@@ -11,8 +15,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import browser, registration
-from app.config import get_settings
+from app import registration
 from app.routes import execute, health, screen
 
 logging.basicConfig(
@@ -24,11 +27,6 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    settings = get_settings()
-
-    await browser.launch(headless=settings.headless)
-    logger.info("Browser ready")
-
     try:
         worker_id = await registration.register()
         registration.start_heartbeat()
@@ -43,10 +41,9 @@ async def lifespan(app: FastAPI):
     yield
 
     await registration.mark_offline()
-    await browser.close()
 
 
-app = FastAPI(title="OpenClaw Gateway", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="OpenClaw Gateway", version="0.3.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

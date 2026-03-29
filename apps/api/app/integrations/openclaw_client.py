@@ -1,18 +1,18 @@
 """
-OpenClaw remote gateway client.
+OpenClaw gateway client.
 
-Routes browser automation tasks to the OpenClaw instance running
-on the worker machine.
+Sends natural language instructions to the gateway, which delegates
+to browser-use. We do NOT control the browser — OpenClaw does.
 """
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import httpx
 
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
-TIMEOUT = 20.0
+TIMEOUT = 60.0
 
 
 def _base_url() -> str:
@@ -27,26 +27,17 @@ def _headers() -> Dict[str, str]:
     return h
 
 
-async def open_url(url: str, session_id: str = "") -> Dict[str, Any]:
-    """Tell OpenClaw to navigate the remote browser to a URL."""
-    return await _execute("open_url", {"url": url, "session_id": session_id})
-
-
-async def search(query: str, session_id: str = "") -> Dict[str, Any]:
-    """Tell OpenClaw to perform a web search on the remote browser."""
-    return await _execute("search", {"query": query, "session_id": session_id})
-
-
-async def _execute(tool: str, params: Dict[str, Any]) -> Dict[str, Any]:
+async def execute(instruction: str, session_id: str = "") -> Dict[str, Any]:
+    """Send a natural language instruction to the gateway."""
     base = _base_url()
     if not base:
         logger.warning("OpenClaw gateway URL not configured.")
-        return {"status": "not_configured", "run_id": None}
+        return {"status": "not_configured"}
 
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
         resp = await client.post(
             f"{base}/execute",
-            json={"tool": tool, "params": params},
+            json={"instruction": instruction, "session_id": session_id},
             headers=_headers(),
         )
         resp.raise_for_status()

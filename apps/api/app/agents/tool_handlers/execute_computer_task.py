@@ -1,8 +1,8 @@
 """
 Tool: execute_computer_task
 
-Sends a natural-language instruction to the OpenClaw gateway for
-general-purpose browser automation.
+Sends a natural-language instruction to the OpenClaw gateway.
+The gateway delegates to browser-use, which handles everything autonomously.
 """
 import logging
 from typing import Any, Dict
@@ -20,11 +20,8 @@ async def handle(args: Dict[str, Any]) -> Dict[str, Any]:
         return {"error": "instruction is required"}
 
     try:
-        result = await openclaw_client._execute(
-            "execute_task",
-            {"instruction": instruction, "session_id": session_id},
-        )
-        logger.info("Computer task dispatched: %s", instruction[:80])
+        result = await openclaw_client.execute(instruction, session_id)
+        logger.info("Task dispatched to OpenClaw: %s", instruction[:80])
         return {
             "status": "executed",
             "instruction": instruction,
