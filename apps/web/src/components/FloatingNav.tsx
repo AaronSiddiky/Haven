@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 type Props = {
-  onOpenAccessibility: () => void;
+  onOpenAccessibility?: () => void;
 };
 
 export function FloatingNav({ onOpenAccessibility }: Props) {
@@ -32,39 +32,45 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
         to="/"
         className="flex shrink-0 items-center gap-2.5 rounded-lg py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
       >
-        <span className="flex h-8 items-end gap-0.5" aria-hidden>
-          {[8, 12, 5].map((h, i) => (
-            <span
-              key={i}
-              className="w-[3px] rounded-sm bg-fg"
-              style={{ height: `${h}px` }}
-            />
-          ))}
+        <span className="relative block h-10 w-[138px] overflow-hidden">
+          <img
+            src="/Haven Logo.png"
+            alt="Haven"
+            className="absolute inset-0 h-full w-full scale-[2.6] object-contain"
+          />
         </span>
-        <span className="text-lg font-bold tracking-tight text-fg">Haven</span>
       </Link>
 
       {/* Center — nav links */}
       <div className="hidden items-center gap-8 sm:flex">
-        <a
-          href="#product"
+        <Link
+          to="/product"
           className="text-sm font-medium text-fg/60 transition-colors hover:text-fg"
         >
           Product
-        </a>
-        <a
-          href="#company"
+        </Link>
+        <Link
+          to="/company"
           className="text-sm font-medium text-fg/60 transition-colors hover:text-fg"
         >
           Company
-        </a>
-        <button
-          type="button"
-          onClick={onOpenAccessibility}
-          className="rounded text-sm font-medium text-fg/60 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2"
-        >
-          Accessibility
-        </button>
+        </Link>
+        {onOpenAccessibility ? (
+          <button
+            type="button"
+            onClick={onOpenAccessibility}
+            className="rounded text-sm font-medium text-fg/60 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2"
+          >
+            Accessibility
+          </button>
+        ) : (
+          <Link
+            to="/accessibility"
+            className="rounded text-sm font-medium text-fg/60 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2"
+          >
+            Accessibility
+          </Link>
+        )}
       </div>
 
       {/* Right — login */}

@@ -23,7 +23,7 @@ export function Transcript({ entries }: TranscriptProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 overflow-y-auto p-4">
+    <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto p-4">
       {entries.map((entry) => (
         <div
           key={entry.id}

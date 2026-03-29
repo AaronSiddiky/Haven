@@ -55,30 +55,24 @@ export function VoiceCircle() {
   const isThinking = state === "thinking";
 
   return (
-    <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#f6f4fb]">
+    <div className="relative flex h-[100dvh] flex-col overflow-hidden bg-[#f6f4fb]">
 
       {/* Header */}
-      <header className="relative z-20 flex items-center justify-between px-5 py-4 sm:px-8">
+      <header className="relative z-20 h-14">
         <Link
           to="/"
-          className="flex items-center gap-2.5 rounded-lg py-1 text-sm font-medium text-fg/55 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+          className="absolute left-4 top-3 inline-flex w-auto items-center rounded-lg py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue sm:left-6"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="h-4 w-4"
-          >
-            <path
-              fillRule="evenodd"
-              d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z"
-              clipRule="evenodd"
+          <span className="relative block h-10 w-[138px] overflow-hidden">
+            <img
+              src="/Haven Logo.png"
+              alt="Haven"
+              className="absolute inset-0 h-full w-full scale-[2.6] object-contain"
             />
-          </svg>
-          Haven
+          </span>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="absolute right-4 top-3 flex items-center gap-3 sm:right-6">
           {error && (
             <span className="text-xs text-red-500/80" role="alert">
               {error}

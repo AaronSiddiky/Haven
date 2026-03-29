@@ -66,12 +66,13 @@ export function Login() {
           transition: "opacity 550ms ease-out 160ms, transform 550ms ease-out 160ms",
         }}
       >
-        <span className="flex h-8 items-end gap-0.5" aria-hidden>
-          {[8, 12, 5].map((h, i) => (
-            <span key={i} className="w-[3px] rounded-sm bg-current" style={{ height: `${h}px` }} />
-          ))}
+        <span className="relative block h-10 w-[138px] overflow-hidden">
+          <img
+            src="/Haven Logo.png"
+            alt="Haven"
+            className="absolute inset-0 h-full w-full scale-[2.6] object-contain"
+          />
         </span>
-        <span className="text-lg font-bold tracking-tight">Haven</span>
       </Link>
 
       <div

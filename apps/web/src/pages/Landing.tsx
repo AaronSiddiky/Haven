@@ -91,13 +91,14 @@ export function Landing() {
                 id="hero-heading"
                 className="font-serif-display text-[clamp(2.75rem,8vw,5.5rem)] font-normal leading-[1.05] tracking-tight text-[#1a1025] drop-shadow-[0_1px_2px_rgba(255,255,255,0.5)]"
               >
-                Don&apos;t watch,
+                Hear more,
                 <br />
-                just listen.
+                Worry less.
               </h1>
               <p className="mx-auto mt-8 max-w-xl text-pretty text-base leading-relaxed text-[#2a2a2a] sm:text-lg">
-                Voice alerts when your world changes. Haven watches for
-                updates and danger — you hear what matters, in plain language.
+                Increasing internet access for people with vision and motor impairments from young to old.
+                If a burglary is reported nearby, Haven can warn you instantly
+                and trigger smart-home responses like turning off lights.
               </p>
               <div className="mt-10">
                 <Link
@@ -182,7 +183,6 @@ export function Landing() {
           </div>
         </section>
       </main>
-
       <AccessibilityDialog open={a11yOpen} onClose={() => setA11yOpen(false)} />
     </div>
   );
