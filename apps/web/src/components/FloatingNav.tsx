@@ -5,27 +5,6 @@ type Props = {
   onOpenAccessibility: () => void;
 };
 
-function ChevronDown({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M3 4.5L6 7.5L9 4.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export function FloatingNav({ onOpenAccessibility }: Props) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -65,30 +44,6 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
         <span className="text-lg font-bold tracking-tight text-fg">Haven</span>
       </Link>
 
-<<<<<<< Updated upstream
-      <div className="hidden items-center gap-7 lg:flex">
-        {(
-          [
-            ["Product", true],
-            ["Individuals", true],
-            ["Business", false],
-            ["Resources", true],
-          ] as const
-        ).map(([label, hasChevron]) => (
-          <a
-            key={label}
-            href="#"
-            className="flex items-center gap-1 text-sm font-medium text-fg hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-            onClick={(e) => e.preventDefault()}
-          >
-            {label}
-            {hasChevron ? <ChevronDown className="opacity-50" /> : null}
-          </a>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
-=======
       {/* Center — nav links */}
       <div className="hidden items-center gap-8 sm:flex">
         <a
@@ -103,38 +58,21 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
         >
           Company
         </a>
->>>>>>> Stashed changes
         <button
           type="button"
           onClick={onOpenAccessibility}
-          className="text-sm font-medium text-fg/60 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2 rounded"
+          className="rounded text-sm font-medium text-fg/60 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2"
         >
           Accessibility
         </button>
-<<<<<<< Updated upstream
-        <span className="hidden h-6 w-px bg-fg/10 sm:block" aria-hidden />
-        <a
-          href="#sign-in"
-          className="inline-flex min-h-10 items-center justify-center rounded-full border border-fg bg-transparent px-4 text-sm font-medium text-fg hover:bg-fg/[0.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
-        >
-          Log in
-        </a>
-        <a
-          href="#sign-in"
-          className="inline-flex min-h-10 items-center justify-center rounded-full border border-fg bg-lavender px-4 text-sm font-semibold text-fg hover:bg-lavender-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
-        >
-          Get started
-        </a>
-=======
->>>>>>> Stashed changes
       </div>
 
       {/* Right — login */}
       <Link
-        to="/login?mode=login"
+        to="/voice"
         className="min-h-9 rounded-full border border-fg/15 bg-white/60 px-5 py-1.5 text-sm font-medium text-fg backdrop-blur-sm transition-colors hover:border-fg/30 hover:bg-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
       >
-        Log in
+        Get started
       </Link>
     </nav>
   );

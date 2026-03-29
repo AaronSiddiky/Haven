@@ -80,35 +80,10 @@ export function VoiceCircle() {
         </div>
 
         {/* Right pane — Screen viewer */}
-<<<<<<< Updated upstream
-        <div className="hidden w-1/2 border-l border-glass-border bg-black/5 lg:block">
-          <ScreenViewer />
-=======
         <div className="hidden w-1/2 lg:block">
           <div className="mx-3 mb-3 mt-0 flex h-[calc(100%-0.75rem)] flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white/40 backdrop-blur-sm">
-            {havenSessionId ? (
-              screenReady ? (
-                <ScreenViewer sessionId={havenSessionId} />
-              ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
-                  <div className="rounded-2xl border border-black/[0.06] bg-white/60 px-6 py-5 shadow-sm">
-                    <p className="text-sm font-medium text-fg">
-                      Screen share not connected
-                    </p>
-                    <p className="mt-1.5 text-xs text-fg/50">
-                      Open the screen share page on your machine to see
-                      Haven in action.
-                    </p>
-                  </div>
-                </div>
-              )
-            ) : (
-              <div className="flex h-full items-center justify-center">
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-fg/15 border-t-fg/50" />
-              </div>
-            )}
+            <ScreenViewer />
           </div>
->>>>>>> Stashed changes
         </div>
       </div>
 
