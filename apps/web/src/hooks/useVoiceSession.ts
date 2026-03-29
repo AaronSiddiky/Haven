@@ -58,6 +58,9 @@ export function useVoiceSession(userId: string): UseVoiceSessionReturn {
   const injectMessage = useCallback((text: string) => {
     const dc = dcRef.current;
     if (!dc || dc.readyState !== "open") return;
+
+    dc.send(JSON.stringify({ type: "response.cancel" }));
+
     dc.send(
       JSON.stringify({
         type: "conversation.item.create",
