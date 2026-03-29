@@ -1,21 +1,13 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 export function Login() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { signup, login, error: authError } = useAuth();
-  const [revealed, setRevealed] = useState(false);
-
-  const [mode, setMode] = useState<"signup" | "login">(
-    searchParams.get("mode") === "login" ? "login" : "signup",
-  );
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setRevealed(true));
@@ -30,173 +22,129 @@ export function Login() {
       setFormError("Email and password are required");
       return;
     }
-    if (password.length < 8) {
-      setFormError("Password must be at least 8 characters");
-      return;
-    }
 
     setSubmitting(true);
     try {
-      if (mode === "signup") {
-        await signup(email, password, name);
-      } else {
-        await login(email, password);
-      }
+      // Placeholder login while auth provider is being wired.
+      await new Promise((resolve) => setTimeout(resolve, 300));
       navigate("/voice");
-    } catch {
-      setFormError(
-        authError ??
-          (mode === "signup"
-            ? "Sign up failed — please try again"
-            : "Log in failed — check your email and password"),
-      );
+    } catch (_error) {
+      setFormError("Log in failed — please try again");
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#f3e8f4]">
-      <div className="grid min-h-[100dvh] grid-cols-1 md:grid-cols-2">
-        <div className="relative flex items-center justify-center bg-gradient-to-br from-[#f5e3f3] via-[#efd7ec] to-[#e8d3e8] px-4 py-20 sm:px-8">
-          {/* Back to home */}
-          <Link
-            to="/"
-            className="absolute left-5 top-5 z-20 flex items-center gap-2.5 rounded-lg py-1 text-fg/75 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 sm:left-8 sm:top-6"
-            style={{
-              opacity: revealed ? 1 : 0,
-              transition: "opacity 0.8s ease 0.2s",
-            }}
-          >
-            <span className="flex h-8 items-end gap-0.5" aria-hidden>
-              {[8, 12, 5].map((h, i) => (
-                <span
-                  key={i}
-                  className="w-[3px] rounded-sm bg-current"
-                  style={{ height: `${h}px` }}
-                />
-              ))}
-            </span>
-            <span className="text-lg font-bold tracking-tight">Haven</span>
-          </Link>
+    <div className="relative min-h-[100dvh] overflow-hidden">
+      <img
+        src="/Haven login 3.png"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+        style={{
+          filter: revealed ? "blur(0px)" : "blur(10px)",
+          transform: revealed ? "scale(1)" : "scale(1.03)",
+          transition: "filter 700ms cubic-bezier(0.22,1,0.36,1), transform 900ms cubic-bezier(0.22,1,0.36,1)",
+        }}
+      />
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-[#f7d8f0]/35 via-[#e8d7ff]/30 to-[#d5ebff]/25"
+        aria-hidden="true"
+        style={{
+          opacity: revealed ? 1 : 0,
+          transition: "opacity 650ms ease-out 80ms",
+        }}
+      />
 
-          {/* Form card */}
-          <div
-            className="relative z-10 w-full max-w-md"
-            style={{
-              opacity: revealed ? 1 : 0,
-              transform: revealed ? "translateX(0)" : "translateX(-20px)",
-              transition: "opacity 0.9s cubic-bezier(0.22,1,0.36,1) 0.3s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.3s",
-            }}
-          >
-            <div className="rounded-3xl border border-black/10 bg-white/45 p-6 shadow-[0_24px_64px_rgba(0,0,0,0.1)] backdrop-blur-md sm:p-10">
-          <h1 className="text-xl font-semibold text-fg">
-            {mode === "signup" ? "Create an account" : "Welcome back"}
+      <Link
+        to="/"
+        className="absolute left-5 top-5 z-20 flex items-center gap-2.5 rounded-lg py-1 text-white/85 transition-colors hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 sm:left-8 sm:top-6"
+        style={{
+          opacity: revealed ? 1 : 0,
+          transform: revealed ? "translateY(0)" : "translateY(-8px)",
+          transition: "opacity 550ms ease-out 160ms, transform 550ms ease-out 160ms",
+        }}
+      >
+        <span className="flex h-8 items-end gap-0.5" aria-hidden>
+          {[8, 12, 5].map((h, i) => (
+            <span key={i} className="w-[3px] rounded-sm bg-current" style={{ height: `${h}px` }} />
+          ))}
+        </span>
+        <span className="text-lg font-bold tracking-tight">Haven</span>
+      </Link>
+
+      <div
+        className="relative z-10 flex min-h-[100dvh] items-center justify-center px-4 py-10"
+        style={{
+          opacity: revealed ? 1 : 0,
+          transform: revealed ? "translateY(0)" : "translateY(14px)",
+          transition: "opacity 700ms cubic-bezier(0.22,1,0.36,1) 180ms, transform 700ms cubic-bezier(0.22,1,0.36,1) 180ms",
+        }}
+      >
+        <div className="w-full max-w-[430px] rounded-[2rem] border border-white/70 bg-white/70 p-6 shadow-[0_30px_80px_rgba(20,35,70,0.22)] backdrop-blur-xl sm:p-8">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200/70 bg-white/85 text-2xl shadow-sm">
+            <span aria-hidden>↪</span>
+          </div>
+
+          <h1 className="mt-5 text-center text-[2rem] font-semibold leading-tight text-slate-900">
+            Sign in with email
           </h1>
+          <p className="mx-auto mt-2 max-w-[300px] text-center text-sm text-slate-500">
+            Continue your session with Haven.
+          </p>
 
-          <form className="mt-6 flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-            {formError && (
-              <p role="alert" className="rounded-xl bg-red-50/90 px-4 py-3 text-sm font-medium text-red-700">
-                {formError}
-              </p>
-            )}
-            {mode === "signup" && (
-              <div>
-                <label htmlFor="auth-name" className="block text-sm font-medium text-fg">
-                  Name
-                </label>
-                <input
-                  id="auth-name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-2 w-full min-h-11 rounded-2xl border border-white/30 bg-white/50 px-4 text-fg placeholder:text-fg/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                  placeholder="Jane Doe"
-                />
-              </div>
-            )}
-            <div>
-              <label htmlFor="auth-email" className="block text-sm font-medium text-fg">
+          <form onSubmit={onSubmit} noValidate className="mt-6">
+            <div className="rounded-2xl border border-white/80 bg-gradient-to-b from-white/95 via-[#eff7ff]/90 to-[#deebff]/90 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+              {formError && (
+                <p role="alert" className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {formError}
+                </p>
+              )}
+
+              <label htmlFor="login-email" className="sr-only">
                 Email
               </label>
               <input
-                id="auth-email"
+                id="login-email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-2 w-full min-h-11 rounded-2xl border border-white/30 bg-white/50 px-4 text-fg placeholder:text-fg/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                placeholder="you@example.com"
+                placeholder="Email"
+                className="h-12 w-full rounded-xl border border-white/90 bg-white/85 px-4 text-slate-800 shadow-sm outline-none placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-300/60"
               />
-            </div>
-            <div>
-              <label htmlFor="auth-password" className="block text-sm font-medium text-fg">
+
+              <label htmlFor="login-password" className="sr-only">
                 Password
               </label>
               <input
-                id="auth-password"
+                id="login-password"
                 name="password"
                 type="password"
-                autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-2 w-full min-h-11 rounded-2xl border border-white/30 bg-white/50 px-4 text-fg placeholder:text-fg/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                placeholder={mode === "signup" ? "At least 8 characters" : "Your password"}
+                placeholder="Password"
+                className="mt-3 h-12 w-full rounded-xl border border-white/90 bg-white/85 px-4 text-slate-800 shadow-sm outline-none placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-300/60"
               />
-            </div>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-2xl bg-fg px-6 text-sm font-semibold text-white transition hover:bg-fg/85 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-50"
-            >
-              {submitting
-                ? mode === "signup" ? "Signing up…" : "Logging in…"
-                : mode === "signup" ? "Sign up" : "Log in"}
-            </button>
-          </form>
-          <p className="mt-5 text-center text-sm text-fg/50">
-            {mode === "signup" ? (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => { setMode("login"); setFormError(null); }}
-                  className="font-medium text-fg underline underline-offset-2"
-                >
-                  Log in
-                </button>
-              </>
-            ) : (
-              <>
-                Don&apos;t have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => { setMode("signup"); setFormError(null); }}
-                  className="font-medium text-fg underline underline-offset-2"
-                >
-                  Sign up
-                </button>
-              </>
-            )}
-          </p>
-            </div>
-          </div>
-        </div>
 
-        <div className="relative hidden md:block">
-          <img
-            src="/Haven login 3.png"
-            alt="Soft marsh landscape at sunset"
-            className="h-full w-full object-cover object-center"
-            style={{
-              opacity: revealed ? 1 : 0,
-              transform: revealed ? "scale(1)" : "scale(1.03)",
-              transition: "opacity 1s cubic-bezier(0.22,1,0.36,1) 0.15s, transform 1.2s cubic-bezier(0.22,1,0.36,1) 0.15s",
-            }}
-          />
+              <div className="mt-2 text-right">
+                <button type="button" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                  Forgot password?
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="mt-4 h-12 w-full rounded-xl bg-gradient-to-b from-slate-800 to-slate-950 text-sm font-semibold text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {submitting ? "Signing in..." : "Get started"}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
