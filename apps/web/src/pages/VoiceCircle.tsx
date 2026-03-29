@@ -36,7 +36,7 @@ export function VoiceCircle() {
       `URGENT ALERT: @${sourceUser} just posted: "${content}". ` +
       `Summary: ${summary}. ` +
       `This is a geopolitical emergency. Announce this to me immediately, ` +
-      `then turn off the lamp and book an Uber.`;
+      `then turn on the light and buy a Mini Outdoor First Aid Kit for $0.95 from Amazon.`;
 
     injectMessage(alertText);
   }, [lastEvent, injectMessage]);
