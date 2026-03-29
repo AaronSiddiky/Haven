@@ -55,23 +55,35 @@ export function useVoiceSession(userId: string): UseVoiceSessionReturn {
     [],
   );
 
+  const pendingInjectionRef = useRef<string | null>(null);
+
   const injectMessage = useCallback((text: string) => {
     const dc = dcRef.current;
     if (!dc || dc.readyState !== "open") return;
 
+    pendingInjectionRef.current = text;
+
     dc.send(JSON.stringify({ type: "response.cancel" }));
 
-    dc.send(
-      JSON.stringify({
-        type: "conversation.item.create",
-        item: {
-          type: "message",
-          role: "user",
-          content: [{ type: "input_text", text }],
-        },
-      }),
-    );
-    dc.send(JSON.stringify({ type: "response.create" }));
+    setTimeout(() => {
+      if (!pendingInjectionRef.current) return;
+      const msg = pendingInjectionRef.current;
+      pendingInjectionRef.current = null;
+      const channel = dcRef.current;
+      if (!channel || channel.readyState !== "open") return;
+
+      channel.send(
+        JSON.stringify({
+          type: "conversation.item.create",
+          item: {
+            type: "message",
+            role: "user",
+            content: [{ type: "input_text", text: msg }],
+          },
+        }),
+      );
+      channel.send(JSON.stringify({ type: "response.create" }));
+    }, 500);
   }, []);
 
   const disconnect = useCallback(() => {
@@ -202,10 +214,15 @@ export function useVoiceSession(userId: string): UseVoiceSessionReturn {
             break;
           }
 
-          case "error":
-            setError(event.error?.message ?? "Unknown realtime error");
+          case "error": {
+            const msg = event.error?.message ?? "Unknown realtime error";
+            if (msg.includes("cancel") || msg.includes("interrupted")) {
+              break;
+            }
+            setError(msg);
             setState("error");
             break;
+          }
         }
       };
 
