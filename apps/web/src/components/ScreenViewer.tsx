@@ -5,10 +5,14 @@ import {
 } from "@livekit/components-react";
 import { Track } from "livekit-client";
 import { useEffect, useState } from "react";
-import { getOperatorToken, type LiveKitTokenData } from "@/lib/api";
 
-interface ScreenViewerProps {
-  sessionId: string;
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+
+interface TokenData {
+  token: string;
+  ws_url: string;
+  room_name: string;
+  identity: string;
 }
 
 function RemoteScreen() {
@@ -22,8 +26,12 @@ function RemoteScreen() {
 
   if (!screenTrack) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+        <div className="h-3 w-3 animate-pulse rounded-full bg-amber-400/60" />
         <p className="text-sm text-muted">Waiting for screen share...</p>
+        <p className="text-xs text-muted/60">
+          Open the share link on your machine to start streaming
+        </p>
       </div>
     );
   }
@@ -36,13 +44,17 @@ function RemoteScreen() {
   );
 }
 
-export function ScreenViewer({ sessionId }: ScreenViewerProps) {
-  const [tokenData, setTokenData] = useState<LiveKitTokenData | null>(null);
+export function ScreenViewer() {
+  const [tokenData, setTokenData] = useState<TokenData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    getOperatorToken(sessionId)
+    fetch(`${API_URL}/livekit/demo/viewer-token`)
+      .then(async (resp) => {
+        if (!resp.ok) throw new Error(`Token request failed: ${resp.status}`);
+        return resp.json();
+      })
       .then((data) => {
         if (!cancelled) setTokenData(data);
       })
@@ -52,7 +64,7 @@ export function ScreenViewer({ sessionId }: ScreenViewerProps) {
     return () => {
       cancelled = true;
     };
-  }, [sessionId]);
+  }, []);
 
   if (error) {
     return (

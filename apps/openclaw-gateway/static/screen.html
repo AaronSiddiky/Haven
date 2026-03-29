@@ -3,105 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Haven — Screen Share</title>
+  <title>Haven — Share Screen</title>
   <script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: system-ui, -apple-system, sans-serif;
-      background: #111;
-      color: #eee;
+      background: #0a0a0a;
+      color: #e5e5e5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 2rem;
       padding: 2rem;
     }
-    h1 { font-size: 1.25rem; font-weight: 600; }
+    h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
     #status {
       padding: 0.5rem 1.25rem;
       border-radius: 9999px;
       font-size: 0.875rem;
       font-weight: 500;
     }
-    .disconnected { background: #333; color: #aaa; }
-    .connecting   { background: #3b2f00; color: #fbbf24; }
-    .connected    { background: #052e16; color: #4ade80; }
-    .error        { background: #3b0000; color: #f87171; }
+    .idle       { background: #1a1a1a; color: #888; }
+    .connecting { background: #3b2f00; color: #fbbf24; }
+    .live       { background: #052e16; color: #4ade80; }
+    .error      { background: #3b0000; color: #f87171; }
     button {
-      padding: 0.75rem 2rem;
+      padding: 0.875rem 2.5rem;
       border-radius: 0.75rem;
-      border: 1px solid #555;
-      background: #222;
-      color: #eee;
+      border: none;
+      background: #fff;
+      color: #0a0a0a;
       font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: opacity 0.15s;
     }
-    button:hover { background: #333; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
-    #info { font-size: 0.75rem; color: #888; max-width: 30rem; text-align: center; }
+    button:hover { opacity: 0.85; }
+    button:disabled { opacity: 0.3; cursor: not-allowed; }
+    #stop { display: none; background: #dc2626; color: #fff; }
+    p.hint { font-size: 0.8rem; color: #555; max-width: 28rem; text-align: center; line-height: 1.5; }
   </style>
 </head>
 <body>
   <h1>Haven Screen Share</h1>
-  <div id="status" class="disconnected">Disconnected</div>
-  <button id="shareBtn" onclick="startShare()">Share Screen</button>
-  <p id="info">
-    This page captures your screen and publishes it to the Haven LiveKit room.
-    Keep this tab open while using Haven.
+  <div id="status" class="idle">Ready</div>
+  <button id="startBtn" onclick="startShare()">Share Entire Screen</button>
+  <button id="stop" onclick="stopShare()">Stop Sharing</button>
+  <p class="hint">
+    Pick your entire screen (not a window) when prompted.<br/>
+    Anyone viewing Haven will see your screen in real time.
   </p>
 
   <script>
+    const HAVEN_API = window.location.hostname === 'localhost'
+      ? 'http://localhost:8000'
+      : window.location.origin;
+
     const statusEl = document.getElementById('status');
-    const shareBtn = document.getElementById('shareBtn');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn  = document.getElementById('stop');
 
     let room = null;
+    let stream = null;
 
     function setStatus(text, cls) {
       statusEl.textContent = text;
       statusEl.className = cls;
     }
 
-    function getSessionIdFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('session_id') || '';
-    }
-
     async function startShare() {
-      shareBtn.disabled = true;
+      startBtn.disabled = true;
       setStatus('Connecting...', 'connecting');
 
       try {
-        const sessionId = getSessionIdFromUrl();
-
-        const configResp = await fetch('/screen/config');
-        const config = await configResp.json();
-        const apiUrl = config.haven_api_url;
-        const workerId = config.worker_id;
-        const sid = sessionId || config.session_id || '';
-
-        if (!sid) {
-          setStatus('No session ID — pass ?session_id=...', 'error');
-          shareBtn.disabled = false;
-          return;
-        }
-
-        const tokenResp = await fetch(`${apiUrl}/livekit/worker-token`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ session_id: sid }),
-        });
-        if (!tokenResp.ok) throw new Error(`Token request failed: ${tokenResp.status}`);
+        // 1. Get publisher token from Haven API (fixed demo room)
+        const tokenResp = await fetch(`${HAVEN_API}/livekit/demo/publisher-token`);
+        if (!tokenResp.ok) throw new Error(`Token failed: ${tokenResp.status}`);
         const tokenData = await tokenResp.json();
 
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: { frameRate: 15 },
+        // 2. Prompt user to share their entire screen
+        stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { frameRate: 15, width: { ideal: 1920 }, height: { ideal: 1080 } },
           audio: false,
         });
 
+        // 3. Connect to LiveKit room and publish
         room = new LivekitClient.Room();
         await room.connect(tokenData.ws_url, tokenData.token);
 
@@ -112,34 +101,40 @@
           source: LivekitClient.Track.Source.ScreenShare,
         });
 
-        setStatus('Connected — sharing screen', 'connected');
+        setStatus('Live — sharing screen', 'live');
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
 
-        if (workerId) {
-          try {
-            await fetch(`${apiUrl}/workers/${workerId}/screen-ready?session_id=${sid}`, {
-              method: 'POST',
-            });
-          } catch (e) {
-            console.warn('screen-ready notification failed:', e);
-          }
-        }
-
-        videoTrack.onended = () => {
-          setStatus('Screen share stopped', 'disconnected');
-          if (room) room.disconnect();
-          shareBtn.disabled = false;
-        };
+        // Handle user stopping share via browser UI
+        videoTrack.onended = () => stopShare();
 
         room.on('disconnected', () => {
-          setStatus('Disconnected from room', 'disconnected');
-          shareBtn.disabled = false;
+          setStatus('Disconnected', 'idle');
+          startBtn.style.display = 'inline-block';
+          startBtn.disabled = false;
+          stopBtn.style.display = 'none';
         });
 
       } catch (err) {
         console.error(err);
         setStatus(`Error: ${err.message}`, 'error');
-        shareBtn.disabled = false;
+        startBtn.disabled = false;
       }
+    }
+
+    function stopShare() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      if (room) {
+        room.disconnect();
+        room = null;
+      }
+      setStatus('Ready', 'idle');
+      startBtn.style.display = 'inline-block';
+      startBtn.disabled = false;
+      stopBtn.style.display = 'none';
     }
   </script>
 </body>

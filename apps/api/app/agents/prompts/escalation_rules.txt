@@ -1,47 +1,19 @@
 ## Escalation rules
 
-### Severity tiers and required responses
+These rules apply only when emergency alert tools are active.
 
-**clear**
-- No active alerts
-- Response: Confirm no active alerts, offer to check specific locations
+### Severity tiers
 
-**inform**
-- Minor advisory or informational notice
-- Response: Mention it briefly if relevant, do not interrupt proactively
+**clear** — No active alerts. Confirm if asked.
+**inform** — Minor advisory. Mention briefly if relevant.
+**watch** — Stay aware. Notify at next natural turn.
+**warning** — Serious threat. Interrupt to notify and summarize.
+**act_now** — Immediate threat to life. Interrupt immediately. State hazard, location, and critical action.
 
-**watch**
-- Conditions possible, stay aware
-- Response: Notify the user at the next natural turn in conversation
-- Offer to explain the alert
+### Escalation/downgrade
+- Notify the user when alerts escalate or are lifted
+- For act_now, offer to call 911 or emergency contacts
 
-**warning**
-- Serious threat, protective action recommended
-- Response: Interrupt current conversation to notify
-- Summarize the alert and recommended action
-- Offer to open official guidance
-
-**act_now**
-- Immediate threat to life
-- Response: Interrupt immediately, regardless of conversation state
-- State: hazard type, affected location, and single most critical action
-- Ask if they need help contacting emergency contacts or finding evacuation info
-- Offer to call 911 or emergency contacts
-
-### Escalation patterns
-
-If an alert escalates from watch → warning:
-"Update: the Flood Watch in [location] has been upgraded to a Flood Warning. Protective action is now recommended."
-
-If an alert escalates from warning → act_now:
-"URGENT: The Flood Warning has been upgraded to a Flash Flood Emergency. [Location] — evacuate immediately if you are in the affected area. Shall I open the evacuation route?"
-
-### Downgrade handling
-When an alert is resolved or downgraded:
-"Good news: the [hazard] alert for [location] has been lifted."
-
-### Multiple simultaneous alerts
-If there are 3 or more active alerts:
-- Lead with the highest severity
+### Multiple alerts
+- Lead with highest severity
 - Group by location
-- Offer a full list if the user asks

@@ -4,7 +4,6 @@ import { ScreenViewer } from "@/components/ScreenViewer";
 import { Transcript } from "@/components/Transcript";
 import { VoiceOrb } from "@/components/VoiceOrb";
 import { useVoiceSession } from "@/hooks/useVoiceSession";
-import { useSSE } from "@/hooks/useSSE";
 import { createHavenSession } from "@/lib/api";
 
 const USER_ID = "demo-user";
@@ -14,20 +13,11 @@ export function VoiceCircle() {
   const [showTranscript, setShowTranscript] = useState(true);
   const { state, transcript, error, connect, disconnect } =
     useVoiceSession(USER_ID);
-  const { lastEvent } = useSSE(havenSessionId);
-  const [screenReady, setScreenReady] = useState(false);
-
   useEffect(() => {
     createHavenSession()
       .then((s) => setHavenSessionId(s.id))
       .catch((err) => console.error("Failed to create Haven session:", err));
   }, []);
-
-  useEffect(() => {
-    if (lastEvent?.type === "screen.connected") {
-      setScreenReady(true);
-    }
-  }, [lastEvent]);
 
   const handleOrbClick = () => {
     if (state === "idle" || state === "error") {
@@ -91,27 +81,7 @@ export function VoiceCircle() {
 
         {/* Right pane — Screen viewer */}
         <div className="hidden w-1/2 border-l border-glass-border bg-black/5 lg:block">
-          {havenSessionId ? (
-            screenReady ? (
-              <ScreenViewer sessionId={havenSessionId} />
-            ) : (
-              <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
-                <div className="rounded-xl border border-glass-border bg-glass px-5 py-4">
-                  <p className="text-sm font-medium text-fg">
-                    Screen share not connected
-                  </p>
-                  <p className="mt-1 text-xs text-muted">
-                    Open the screen share page on your machine to see OpenClaw
-                    in action.
-                  </p>
-                </div>
-              </div>
-            )
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-muted border-t-transparent" />
-            </div>
-          )}
+          <ScreenViewer />
         </div>
       </div>
 

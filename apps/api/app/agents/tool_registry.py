@@ -165,10 +165,10 @@ TOOLS: List[Dict[str, Any]] = [
         "type": "function",
         "name": "execute_computer_task",
         "description": (
-            "Execute a task on the user's computer using the remote browser agent (OpenClaw). "
-            "Use this for any general web browsing, searching, form filling, information "
-            "retrieval, or other browser-based task the user requests. Examples: "
-            "'open wikipedia', 'search for weather in NYC', 'go to nytimes.com'."
+            "Forward ANY user request to OpenClaw, the AI agent running on the user's computer. "
+            "OpenClaw can do anything: browse the web, control smart home devices, open apps, "
+            "manage files, run scripts, send messages, and more. Use this tool for EVERY user "
+            "request without exception. Pass the user's instruction exactly as they said it."
         ),
         "parameters": {
             "type": "object",
