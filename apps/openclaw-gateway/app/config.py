@@ -13,6 +13,10 @@ class GatewaySettings(BaseSettings):
     openclaw_url: str = "http://127.0.0.1:18789"
     openclaw_token: str = ""
 
+    livekit_api_key: str = ""
+    livekit_api_secret: str = ""
+    livekit_ws_url: str = ""
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 

@@ -58,9 +58,7 @@
   </p>
 
   <script>
-    const HAVEN_API = window.location.hostname === 'localhost'
-      ? 'http://localhost:8000'
-      : window.location.origin;
+    const GATEWAY = window.location.origin;
 
     const statusEl = document.getElementById('status');
     const startBtn = document.getElementById('startBtn');
@@ -80,7 +78,7 @@
 
       try {
         // 1. Get publisher token from Haven API (fixed demo room)
-        const tokenResp = await fetch(`${HAVEN_API}/livekit/demo/publisher-token`);
+        const tokenResp = await fetch(`${GATEWAY}/screen/publisher-token`);
         if (!tokenResp.ok) throw new Error(`Token failed: ${tokenResp.status}`);
         const tokenData = await tokenResp.json();
 
