@@ -23,6 +23,7 @@ interface UseVoiceSessionReturn {
   error: string | null;
   connect: () => Promise<void>;
   disconnect: () => void;
+  injectMessage: (text: string) => void;
 }
 
 const OPENAI_REALTIME_URL = "https://api.openai.com/v1/realtime";
@@ -53,6 +54,22 @@ export function useVoiceSession(userId: string): UseVoiceSessionReturn {
     },
     [],
   );
+
+  const injectMessage = useCallback((text: string) => {
+    const dc = dcRef.current;
+    if (!dc || dc.readyState !== "open") return;
+    dc.send(
+      JSON.stringify({
+        type: "conversation.item.create",
+        item: {
+          type: "message",
+          role: "user",
+          content: [{ type: "input_text", text }],
+        },
+      }),
+    );
+    dc.send(JSON.stringify({ type: "response.create" }));
+  }, []);
 
   const disconnect = useCallback(() => {
     dcRef.current?.close();
@@ -232,5 +249,5 @@ export function useVoiceSession(userId: string): UseVoiceSessionReturn {
     };
   }, [disconnect]);
 
-  return { state, transcript, error, connect, disconnect };
+  return { state, transcript, error, connect, disconnect, injectMessage };
 }

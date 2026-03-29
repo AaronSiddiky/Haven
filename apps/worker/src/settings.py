@@ -19,7 +19,13 @@ class WorkerSettings(BaseSettings):
     # Alert expiry
     expiry_check_interval_seconds: int = 600
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    # Watchtower — Twitter monitoring via RapidAPI twitter-api47
+    rapidapi_key: str = ""
+    twitter_target_username: str = ""
+    tweet_poll_interval_seconds: int = 15
+    haven_api_url: str = "http://localhost:8000"
+
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
     @property
     def states_list(self) -> list[str]:

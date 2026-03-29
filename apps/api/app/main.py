@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.core.logging import setup_logging
-from app.routes import actions, alerts, contacts, events, health, livekit, places, preferences, sessions, voice, workers
+from app.routes import actions, alerts, contacts, events, health, livekit, places, preferences, sessions, voice, watchtower, workers
 
 setup_logging()
 settings = get_settings()
@@ -29,3 +29,4 @@ app.include_router(sessions.router, prefix="/sessions", tags=["sessions"])
 app.include_router(workers.router, prefix="/workers", tags=["workers"])
 app.include_router(livekit.router, prefix="/livekit", tags=["livekit"])
 app.include_router(events.router, prefix="/events", tags=["events"])
+app.include_router(watchtower.router, prefix="/watchtower", tags=["watchtower"])

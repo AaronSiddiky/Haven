@@ -15,7 +15,7 @@ import sys
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from src.jobs import expire_old_alerts, notify_users, poll_official_alerts
+from src.jobs import expire_old_alerts, notify_users, poll_official_alerts, poll_tweets
 from src.settings import get_settings
 
 logging.basicConfig(
@@ -54,6 +54,20 @@ async def main() -> None:
         id="notify_users",
         replace_existing=True,
     )
+
+    if settings.rapidapi_key and settings.twitter_target_username:
+        scheduler.add_job(
+            poll_tweets.run,
+            "interval",
+            seconds=settings.tweet_poll_interval_seconds,
+            id="poll_tweets",
+            replace_existing=True,
+        )
+        logger.info(
+            "Watchtower enabled — polling @%s every %ds",
+            settings.twitter_target_username,
+            settings.tweet_poll_interval_seconds,
+        )
 
     scheduler.start()
     logger.info(

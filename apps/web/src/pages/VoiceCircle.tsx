@@ -1,21 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ScreenViewer } from "@/components/ScreenViewer";
 import { Transcript } from "@/components/Transcript";
 import { VoiceOrb } from "@/components/VoiceOrb";
 import { useVoiceSession } from "@/hooks/useVoiceSession";
+import { useSSE } from "@/hooks/useSSE";
 import { createHavenSession } from "@/lib/api";
 
 const USER_ID = "demo-user";
 
 export function VoiceCircle() {
-  const { state, transcript, error, connect, disconnect } =
+  const { state, transcript, error, connect, disconnect, injectMessage } =
     useVoiceSession(USER_ID);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const { lastEvent } = useSSE(sessionId);
+  const lastAlertRef = useRef<string | null>(null);
+
   useEffect(() => {
     createHavenSession()
-      .then(() => {})
+      .then((s) => setSessionId(s.id))
       .catch((err) => console.error("Failed to create Haven session:", err));
   }, []);
+
+  useEffect(() => {
+    if (!lastEvent || lastEvent.type !== "watchtower.alert") return;
+    const content = lastEvent.content as string;
+    const sourceUser = lastEvent.source_user as string;
+    const summary = lastEvent.summary as string;
+
+    const alertKey = `${sourceUser}:${content?.slice(0, 40)}`;
+    if (alertKey === lastAlertRef.current) return;
+    lastAlertRef.current = alertKey;
+
+    const alertText =
+      `URGENT ALERT: @${sourceUser} just posted: "${content}". ` +
+      `Summary: ${summary}. ` +
+      `This is a geopolitical emergency. Announce this to me immediately, ` +
+      `then turn off the lamp and book an Uber.`;
+
+    injectMessage(alertText);
+  }, [lastEvent, injectMessage]);
 
   const handleOrbClick = () => {
     if (state === "idle" || state === "error") {

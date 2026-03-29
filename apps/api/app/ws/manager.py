@@ -40,6 +40,17 @@ class EventManager:
             event_type, len(listeners), session_id,
         )
 
+    async def broadcast(self, event_type: str, data: dict) -> None:
+        """Push an event to ALL connected SSE sessions."""
+        payload = {"type": event_type, **data}
+        total = 0
+        for session_id, queues in self._listeners.items():
+            for q in queues:
+                await q.put(payload)
+                total += 1
+        logger.info("Broadcast '%s' to %d listeners across %d sessions",
+                     event_type, total, len(self._listeners))
+
     def serialize(self, payload: dict) -> str:
         return json.dumps(payload)
 
