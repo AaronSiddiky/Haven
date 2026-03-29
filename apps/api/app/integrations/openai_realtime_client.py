@@ -50,15 +50,19 @@ async def create_ephemeral_session(
     payload: Dict[str, Any] = {
         "model": model,
         "voice": voice,
+        "modalities": ["text", "audio"],
         "instructions": instructions,
         "tools": tools,
         "tool_choice": "auto",
+        "temperature": 0.6,
+        "max_response_output_tokens": 300,
         "input_audio_transcription": {"model": "whisper-1"},
         "turn_detection": {
             "type": "server_vad",
-            "threshold": 0.5,
-            "prefix_padding_ms": 300,
-            "silence_duration_ms": 500,
+            "threshold": 0.7,
+            "prefix_padding_ms": 500,
+            "silence_duration_ms": 1200,
+            "create_response": True,
         },
     }
 
