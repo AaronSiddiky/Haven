@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 type Props = {
   onOpenAccessibility: () => void;
 };
@@ -24,13 +27,30 @@ function ChevronDown({ className }: { className?: string }) {
 }
 
 export function FloatingNav({ onOpenAccessibility }: Props) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const check = () => setScrolled(window.scrollY > window.innerHeight - 80);
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
+
   return (
     <nav
-      className="floating-nav mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 rounded-full border border-fg/10 bg-white px-4 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,0.08)] sm:gap-4 sm:px-6 sm:py-3"
+      className="flex items-center justify-between px-6 py-4 sm:px-10"
+      style={{
+        backgroundColor: scrolled ? "rgba(255,255,255,0.75)" : "transparent",
+        backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+        WebkitBackdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
+        transition: "background-color 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease, border-bottom-color 0.5s ease",
+      }}
       aria-label="Primary"
     >
-      <a
-        href="/"
+      {/* Left — logo */}
+      <Link
+        to="/"
         className="flex shrink-0 items-center gap-2.5 rounded-lg py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
       >
         <span className="flex h-8 items-end gap-0.5" aria-hidden>
@@ -43,8 +63,9 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
           ))}
         </span>
         <span className="text-lg font-bold tracking-tight text-fg">Haven</span>
-      </a>
+      </Link>
 
+<<<<<<< Updated upstream
       <div className="hidden items-center gap-7 lg:flex">
         {(
           [
@@ -67,13 +88,30 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+=======
+      {/* Center — nav links */}
+      <div className="hidden items-center gap-8 sm:flex">
+        <a
+          href="#product"
+          className="text-sm font-medium text-fg/60 transition-colors hover:text-fg"
+        >
+          Product
+        </a>
+        <a
+          href="#company"
+          className="text-sm font-medium text-fg/60 transition-colors hover:text-fg"
+        >
+          Company
+        </a>
+>>>>>>> Stashed changes
         <button
           type="button"
           onClick={onOpenAccessibility}
-          className="min-h-10 rounded-full border border-fg/20 bg-transparent px-4 text-sm font-medium text-fg hover:border-fg/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+          className="text-sm font-medium text-fg/60 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2 rounded"
         >
           Accessibility
         </button>
+<<<<<<< Updated upstream
         <span className="hidden h-6 w-px bg-fg/10 sm:block" aria-hidden />
         <a
           href="#sign-in"
@@ -87,7 +125,17 @@ export function FloatingNav({ onOpenAccessibility }: Props) {
         >
           Get started
         </a>
+=======
+>>>>>>> Stashed changes
       </div>
+
+      {/* Right — login */}
+      <Link
+        to="/login?mode=login"
+        className="min-h-9 rounded-full border border-fg/15 bg-white/60 px-5 py-1.5 text-sm font-medium text-fg backdrop-blur-sm transition-colors hover:border-fg/30 hover:bg-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+      >
+        Log in
+      </Link>
     </nav>
   );
 }

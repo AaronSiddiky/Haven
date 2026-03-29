@@ -27,7 +27,7 @@ export function WavyBackground({
   className,
   containerClassName,
   colors,
-  waveWidth = 50,
+  waveWidth: _waveWidth,
   backgroundFill = "black",
   blur = 10,
   speed = "fast",
@@ -43,18 +43,9 @@ export function WavyBackground({
     if (!ctx) return;
 
     const noise = createNoise3D();
-    const waveColors = colors ?? DEFAULT_COLORS;
+    const palette = colors ?? DEFAULT_COLORS;
 
-    const getSpeed = () => {
-      switch (speed) {
-        case "slow":
-          return 0.001;
-        case "fast":
-          return 0.002;
-        default:
-          return 0.001;
-      }
-    };
+    const spd = speed === "slow" ? 0.0004 : 0.001;
 
     let w = 0;
     let h = 0;
@@ -72,50 +63,99 @@ export function WavyBackground({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const drawWave = (n: number) => {
-      nt += getSpeed();
-      const lineW = waveWidth || 50;
+    const fillWash = (
+      color: string,
+      alpha: number,
+      baseY: number,
+      amp: number,
+      fxLarge: number,
+      fxSmall: number,
+      seed: number,
+      fromTop: boolean,
+    ) => {
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.beginPath();
 
-      for (let i = 0; i < n; i++) {
-        ctx.beginPath();
-        ctx.lineWidth = lineW;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.strokeStyle = waveColors[i % waveColors.length];
-        ctx.globalAlpha = waveOpacity;
+      const edge = fromTop ? -100 : h + 100;
+      ctx.moveTo(-100, edge);
 
-        for (let x = 0; x <= w; x += 5) {
-          const y = noise(x / 800, 0.3 * i, nt) * 100;
-          const py = y + h * 0.5;
-          if (x === 0) ctx.moveTo(x, py);
-          else ctx.lineTo(x, py);
-        }
-        ctx.stroke();
+      for (let x = -100; x <= w + 100; x += 4) {
+        const n1 = noise(x / fxLarge, seed, nt);
+        const n2 = noise(x / fxSmall, seed + 10, nt * 0.6);
+        const y = baseY + n1 * amp + n2 * amp * 0.35;
+        ctx.lineTo(x, y);
       }
-      ctx.globalAlpha = 1;
+
+      ctx.lineTo(w + 100, edge);
+      ctx.closePath();
+      ctx.fill();
     };
 
     const render = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.filter = blur > 0 ? `blur(${blur}px)` : "none";
+
       ctx.globalAlpha = 1;
       ctx.fillStyle = backgroundFill;
       ctx.fillRect(0, 0, w, h);
-      drawWave(5);
+
+      const n = palette.length;
+
+      for (let i = 0; i < n; i++) {
+        const t = n > 1 ? i / (n - 1) : 0.5;
+        const fromTop = t < 0.55;
+        const baseY = h * (0.2 + t * 0.55);
+        const amp = h * (0.12 + Math.sin(i * 2.1) * 0.04);
+        const alpha = waveOpacity * (0.55 + Math.sin(i * 1.3 + 0.5) * 0.3);
+
+        fillWash(
+          palette[i],
+          alpha,
+          baseY,
+          amp,
+          380 + i * 90,
+          140 + i * 35,
+          i * 0.8,
+          fromTop,
+        );
+      }
+
+      // Detail / texture pass — smaller overlapping accents
+      const detailCount = Math.min(n, 5);
+      for (let j = 0; j < detailCount; j++) {
+        const ci = (j * 2) % n;
+        const t = j / detailCount;
+        const fromTop = j % 2 !== 0;
+        const baseY = h * (0.3 + t * 0.35);
+
+        fillWash(
+          palette[ci],
+          waveOpacity * 0.22,
+          baseY,
+          h * 0.07,
+          200 + j * 55,
+          90 + j * 20,
+          ci * 0.9 + 20,
+          fromTop,
+        );
+      }
+
+      ctx.globalAlpha = 1;
+      nt += spd;
       raf = requestAnimationFrame(render);
     };
 
     resize();
     raf = requestAnimationFrame(render);
-
     window.addEventListener("resize", resize);
 
     return () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(raf);
     };
-  }, [backgroundFill, blur, colors, speed, waveOpacity, waveWidth]);
+  }, [backgroundFill, blur, colors, speed, waveOpacity]);
 
   return (
     <div className={cn("relative min-h-screen w-full", containerClassName)}>

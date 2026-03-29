@@ -31,12 +31,12 @@ export function VoiceCircle() {
     state !== "idle" && state !== "connecting" && state !== "error";
 
   return (
-    <div className="flex h-screen flex-col bg-canvas">
+    <div className="painted-bg-subtle flex h-screen flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-glass-border px-4 py-3 sm:px-6">
+      <header className="flex items-center justify-between px-5 py-4 sm:px-8">
         <Link
           to="/"
-          className="flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-fg"
+          className="flex items-center gap-2.5 rounded-lg py-1 text-sm font-medium text-fg/50 transition-colors hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,22 +50,22 @@ export function VoiceCircle() {
               clipRule="evenodd"
             />
           </svg>
-          Back
+          Haven
         </Link>
 
         <div className="flex items-center gap-3">
           {error && (
-            <span className="text-xs text-red-400" role="alert">
+            <span className="text-xs text-red-500/80" role="alert">
               {error}
             </span>
           )}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2 rounded-full bg-white/50 px-3 py-1.5 backdrop-blur-sm">
             <div
-              className={`h-2 w-2 rounded-full ${
-                isConnected ? "bg-green-400" : "bg-muted/40"
+              className={`h-1.5 w-1.5 rounded-full transition-colors duration-500 ${
+                isConnected ? "bg-emerald-500" : "bg-fg/20"
               }`}
             />
-            <span className="text-xs font-medium text-muted">
+            <span className="text-xs font-medium text-fg/60">
               {isConnected ? "Connected" : "Disconnected"}
             </span>
           </div>
@@ -80,20 +80,47 @@ export function VoiceCircle() {
         </div>
 
         {/* Right pane — Screen viewer */}
+<<<<<<< Updated upstream
         <div className="hidden w-1/2 border-l border-glass-border bg-black/5 lg:block">
           <ScreenViewer />
+=======
+        <div className="hidden w-1/2 lg:block">
+          <div className="mx-3 mb-3 mt-0 flex h-[calc(100%-0.75rem)] flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white/40 backdrop-blur-sm">
+            {havenSessionId ? (
+              screenReady ? (
+                <ScreenViewer sessionId={havenSessionId} />
+              ) : (
+                <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+                  <div className="rounded-2xl border border-black/[0.06] bg-white/60 px-6 py-5 shadow-sm">
+                    <p className="text-sm font-medium text-fg">
+                      Screen share not connected
+                    </p>
+                    <p className="mt-1.5 text-xs text-fg/50">
+                      Open the screen share page on your machine to see
+                      Haven in action.
+                    </p>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-fg/15 border-t-fg/50" />
+              </div>
+            )}
+          </div>
+>>>>>>> Stashed changes
         </div>
       </div>
 
       {/* Bottom — Transcript */}
       <div
-        className={`border-t border-glass-border transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           showTranscript ? "h-56" : "h-10"
         }`}
       >
         <button
           onClick={() => setShowTranscript(!showTranscript)}
-          className="flex w-full items-center justify-between px-4 py-2.5 text-xs font-medium text-muted hover:text-fg"
+          className="flex w-full items-center justify-between border-t border-black/[0.06] px-5 py-2.5 text-xs font-medium text-fg/45 hover:text-fg/70"
         >
           <span>Transcript</span>
           <svg

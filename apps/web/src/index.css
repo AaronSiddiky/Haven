@@ -87,6 +87,28 @@ html[data-contrast="high"] {
   font-family: var(--font-serif);
 }
 
+.painted-bg {
+  background:
+    radial-gradient(ellipse 90% 70% at 20% 12%, rgba(192, 204, 228, 0.72) 0%, transparent 100%),
+    radial-gradient(ellipse 75% 60% at 78% 8%, rgba(168, 152, 200, 0.6) 0%, transparent 100%),
+    radial-gradient(ellipse 65% 50% at 50% 28%, rgba(136, 120, 168, 0.32) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 45% at 60% 48%, rgba(212, 168, 184, 0.48) 0%, transparent 100%),
+    radial-gradient(ellipse 80% 55% at 15% 52%, rgba(191, 180, 208, 0.42) 0%, transparent 100%),
+    radial-gradient(ellipse 90% 65% at 55% 68%, rgba(168, 196, 156, 0.58) 0%, transparent 100%),
+    radial-gradient(ellipse 75% 55% at 28% 82%, rgba(142, 168, 128, 0.48) 0%, transparent 100%),
+    radial-gradient(ellipse 70% 50% at 82% 78%, rgba(110, 136, 96, 0.32) 0%, transparent 100%),
+    #ece4d8;
+}
+
+.painted-bg-subtle {
+  background:
+    radial-gradient(ellipse 100% 80% at 30% 20%, rgba(192, 204, 228, 0.25) 0%, transparent 100%),
+    radial-gradient(ellipse 80% 70% at 75% 15%, rgba(168, 152, 200, 0.2) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 50% at 50% 60%, rgba(212, 168, 184, 0.15) 0%, transparent 100%),
+    radial-gradient(ellipse 90% 70% at 60% 80%, rgba(168, 196, 156, 0.2) 0%, transparent 100%),
+    #f5f0e8;
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
