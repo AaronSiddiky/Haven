@@ -91,7 +91,7 @@ export function AccessibilityDialog({ open, onClose }: Props) {
       <button
         type="button"
         aria-label="Close accessibility settings"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm motion-safe:transition-opacity"
+        className="a11y-overlay absolute inset-0 bg-black/60 backdrop-blur-sm motion-safe:transition-opacity"
         onClick={onClose}
       />
       <div
@@ -99,7 +99,7 @@ export function AccessibilityDialog({ open, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="glass-panel relative z-10 w-full max-w-lg p-6 shadow-2xl"
+        className="a11y-dialog glass-panel relative z-10 w-full max-w-lg p-6 shadow-2xl"
       >
         <div className="flex items-start justify-between gap-4">
           <h2 id={titleId} className="text-lg font-semibold text-fg">
@@ -108,7 +108,7 @@ export function AccessibilityDialog({ open, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="min-h-11 min-w-11 rounded-full border border-glass-border text-muted motion-safe:transition hover:border-fg/30 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+            className="min-h-11 min-w-11 rounded-full border border-black/20 text-fg/70 motion-safe:transition hover:border-black/40 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
           >
             <span className="sr-only">Close</span>
             <span aria-hidden>×</span>
@@ -118,7 +118,7 @@ export function AccessibilityDialog({ open, onClose }: Props) {
         <div
           role="tablist"
           aria-label="Accessibility categories"
-          className="mt-6 flex gap-2 border-b border-glass-border pb-3"
+          className="mt-6 flex gap-2 border-b border-black/20 pb-3"
         >
           <button
             type="button"
@@ -131,8 +131,8 @@ export function AccessibilityDialog({ open, onClose }: Props) {
             onKeyDown={(e) => onTabKeyDown(e, "visual")}
             className={`rounded-full px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue ${
               activeTab === "visual"
-                ? "bg-fg/10 text-fg"
-                : "text-muted hover:text-fg"
+                ? "bg-fg text-white"
+                : "border border-black/20 text-fg/75 hover:bg-black/5 hover:text-fg"
             }`}
           >
             Visual accessibility
@@ -148,8 +148,8 @@ export function AccessibilityDialog({ open, onClose }: Props) {
             onKeyDown={(e) => onTabKeyDown(e, "audio")}
             className={`rounded-full px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue ${
               activeTab === "audio"
-                ? "bg-fg/10 text-fg"
-                : "text-muted hover:text-fg"
+                ? "bg-fg text-white"
+                : "border border-black/20 text-fg/75 hover:bg-black/5 hover:text-fg"
             }`}
           >
             Audio
@@ -164,22 +164,22 @@ export function AccessibilityDialog({ open, onClose }: Props) {
               aria-labelledby={`${panelId}-tab-visual`}
               className="flex flex-col gap-6"
             >
-              <p className="text-sm text-muted">
+              <p className="text-sm text-fg/80">
                 Adjust how Haven looks. Changes apply immediately and are saved in this
                 browser.
               </p>
 
-              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-glass-border bg-fg/[0.04] px-4 py-3">
+              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-black/20 bg-white px-4 py-3">
                 <span className="text-sm font-medium text-fg">High contrast</span>
                 <input
                   type="checkbox"
                   checked={highContrast}
                   onChange={(e) => setHighContrast(e.target.checked)}
-                  className="h-5 w-5 rounded border-glass-border text-accent-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+                  className="h-5 w-5 rounded border-black/40 text-accent-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                 />
               </label>
 
-              <fieldset className="rounded-2xl border border-glass-border bg-fg/[0.04] px-4 py-3">
+              <fieldset className="rounded-2xl border border-black/20 bg-white px-4 py-3">
                 <legend className="px-1 text-sm font-medium text-fg">Text size</legend>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {TEXT_SCALES.map((step) => (
@@ -190,7 +190,7 @@ export function AccessibilityDialog({ open, onClose }: Props) {
                       className={`min-h-11 rounded-full px-4 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue ${
                         textScale === step
                           ? "bg-accent-blue text-white"
-                          : "border border-glass-border text-muted hover:text-fg"
+                          : "border border-black/30 text-fg/80 hover:bg-black/5 hover:text-fg"
                       }`}
                     >
                       {step}%
@@ -199,17 +199,17 @@ export function AccessibilityDialog({ open, onClose }: Props) {
                 </div>
               </fieldset>
 
-              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-glass-border bg-fg/[0.04] px-4 py-3">
+              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-black/20 bg-white px-4 py-3">
                 <span className="text-sm font-medium text-fg">Dyslexia-friendly font</span>
                 <input
                   type="checkbox"
                   checked={dyslexiaFont}
                   onChange={(e) => setDyslexiaFont(e.target.checked)}
-                  className="h-5 w-5 rounded border-glass-border text-accent-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+                  className="h-5 w-5 rounded border-black/40 text-accent-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                 />
               </label>
 
-              <p className="text-xs text-muted">
+              <p className="text-xs text-fg/75">
                 We use semantic HTML and keyboard-friendly controls. Decorative graphics are
                 hidden from screen readers.
               </p>
@@ -220,7 +220,7 @@ export function AccessibilityDialog({ open, onClose }: Props) {
               id={`${panelId}-audio`}
               aria-labelledby={`${panelId}-tab-audio`}
             >
-              <p className="text-sm text-muted">
+              <p className="text-sm text-fg/80">
                 Audio preferences for voice alerts will appear here. This is a preview
                 layout only.
               </p>

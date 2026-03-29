@@ -97,8 +97,7 @@ export function Landing() {
               </h1>
               <p className="mx-auto mt-8 max-w-xl text-pretty text-base leading-relaxed text-[#2a2a2a] sm:text-lg">
                 Increasing internet access for people with vision and motor impairments from young to old.
-                If a burglary is reported nearby, Haven can warn you instantly
-                and trigger smart-home responses like turning off lights.
+
               </p>
               <div className="mt-10">
                 <Link
